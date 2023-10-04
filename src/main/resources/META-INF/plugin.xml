@@ -5,6 +5,7 @@
     <vendor>aooohan</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.database</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
@@ -12,7 +13,13 @@
         <toolWindow factoryClass="com.github.aooohan.ktormgenerator.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
     </extensions>
 
-    <applicationListeners>
-        <listener class="com.github.aooohan.ktormgenerator.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
-    </applicationListeners>
+    <actions>
+
+        <action id="bmd-mybatis-generate-action"
+                class="com.github.aooohan.ktormgenerator.action.GeneratorMainAction"
+                text="Ktorm-Generator"
+                description="Ktorm generator idea plugin">
+            <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
+        </action>
+    </actions>
 </idea-plugin>
