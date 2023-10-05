@@ -18,7 +18,7 @@
 <idea-plugin>
     <id>com.github.aooohan.ktormgenerator</id>
     <name>KtormGenerator</name>
-    <vendor>aooohan</vendor>
+    <vendor email="aooohan@gmail.com" url="https://github.com/aooohan">aooohan</vendor>
     <description><![CDATA[
         KtormGenerator is a plugin for generating Ktorm entity class from database table.
     ]]></description>
