@@ -91,6 +91,7 @@ public class KtormGeneratorGUI {
 
 
     private void setOptions(GeneratorOptions options) {
+        options.setTableInfoList(model.getItems());
         basePackageTextField.setText(options.getBasePackageText());
         basePathTextField.setText(options.getBasePathText());
         relativePackageTextField.setText(options.getRelativePackageText());

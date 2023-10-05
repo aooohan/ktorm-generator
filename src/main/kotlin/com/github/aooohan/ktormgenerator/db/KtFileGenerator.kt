@@ -101,7 +101,7 @@ class KtFileGenerator(
             appendLine()
             appendLine()
 
-            appendLine("val Database.${className.lowercase()}s get() = this.sequenceOf(${className}s)")
+            appendLine("val Database._${className.replaceFirstChar { it.lowercaseChar() }}s get() = this.sequenceOf(${className}s)")
         }
 
         return interfaceCode
@@ -205,7 +205,7 @@ class KtFileGenerator(
 
                 val filedTypeInfos = it.columnInfos.map { columnInfo ->
                     parseColum2Field(columnInfo).let { fti ->
-                        if (tableKeyFieldMap.containsKey(fti.name)) {
+                        if (tableKeyFieldMap.containsKey(fti.originalName)) {
                             fti.primaryKey = true
                         }
                         fti
