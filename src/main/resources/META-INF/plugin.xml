@@ -17,16 +17,16 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.aooohan.ktormgenerator</id>
-    <name>ktorm-generator Template</name>
+    <name>KtormGenerator</name>
     <vendor>aooohan</vendor>
+    <description><![CDATA[
+        KtormGenerator is a plugin for generating Ktorm entity class from database table.
+    ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.database</depends>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
-
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.aooohan.ktormgenerator.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
     </extensions>
 
     <actions>
