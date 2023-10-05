@@ -1,8 +1,8 @@
 # ktorm-generator
 
 ![Build](https://github.com/aooohan/ktorm-generator/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
+[![Version](https://img.shields.io/jetbrains/plugin/v/22855-ktormgenerator.svg)](https://plugins.jetbrains.com/plugin/22855-ktormgenerator)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/22855-ktormgenerator.svg)](https://plugins.jetbrains.com/plugin/22855-ktormgenerator)
 
 ## Template ToDo list
 - [x] Create a new [IntelliJ Platform Plugin Template][template] project.
