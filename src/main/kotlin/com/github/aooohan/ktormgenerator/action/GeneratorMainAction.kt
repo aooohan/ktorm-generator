@@ -34,7 +34,7 @@ class GeneratorMainAction: AnAction() {
             return
         }
 
-        val classGeneratorDialogWrapper = ClassGeneratorDialogWrapper(project!!)
+        val classGeneratorDialogWrapper = ClassGeneratorDialogWrapper(project!!, dbTables)
 
         classGeneratorDialogWrapper.show()
 

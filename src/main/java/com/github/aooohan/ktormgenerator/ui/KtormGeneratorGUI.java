@@ -3,21 +3,22 @@ package com.github.aooohan.ktormgenerator.ui;
 import com.github.aooohan.ktormgenerator.action.GeneratorOptions;
 import com.github.aooohan.ktormgenerator.dto.KtormTableColumnInfo;
 import com.github.aooohan.ktormgenerator.dto.TableUIInfo;
+import com.github.aooohan.ktormgenerator.services.KtormGeneratorService;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.ChooseModulesDialog;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.ToolbarDecorator;
+import com.intellij.ui.table.TableView;
+import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.util.ui.ListTableModel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author : lihan
@@ -30,6 +31,7 @@ public class KtormGeneratorGUI {
             new KtormTableColumnInfo("className", true)
     );
     private final Project project;
+    private final KtormGeneratorService ktormGeneratorService;
     private JPanel leftPanel;
     private JTextField basePackageTextField;
     private JTextField basePathTextField;
@@ -40,8 +42,28 @@ public class KtormGeneratorGUI {
 
     private String moduleName;
 
-    public KtormGeneratorGUI(Project project) {
+    public KtormGeneratorGUI(Project project, List<TableUIInfo> tableUIInfos, GeneratorOptions options) {
         this.project = project;
+        this.ktormGeneratorService = project.getService(KtormGeneratorService.class);
+
+        setOptions(options);
+        model.addRows(tableUIInfos);
+
+        TableView<TableUIInfo> tableView = new TableView<>(model);
+        GridConstraints gridConstraints = new GridConstraints();
+        gridConstraints.setFill(GridConstraints.FILL_HORIZONTAL);
+
+        listPanel.add(ToolbarDecorator.createDecorator(tableView)
+                        .setPreferredSize(new Dimension(860, 200))
+                        .disableAddAction()
+                        .disableRemoveAction()
+                        .disableUpDownActions()
+                        .createPanel(),
+                gridConstraints);
+
+        tableView.addPropertyChangeListener(evt -> {
+            options.setTableInfoList(model.getItems());
+        });
     }
 
     public JPanel getRootPanel() {
@@ -50,7 +72,7 @@ public class KtormGeneratorGUI {
 
 
 
-    public void setOptions(GeneratorOptions options) {
+    private void setOptions(GeneratorOptions options) {
         basePackageTextField.setText(options.getBasePackageText());
         basePathTextField.setText(options.getBasePathText());
         relativePackageTextField.setText(options.getRelativePackageText());
@@ -99,32 +121,6 @@ public class KtormGeneratorGUI {
         }
     }
     private void chooseModulePath(Module module) {
-
-        String moduleDirPath = ModuleUtil.getModuleDirPath(module);
-        int childModuleIndex = indexFromChildModule(moduleDirPath);
-        if (hasChildModule(childModuleIndex)) {
-            Optional<String> pathFromModule = getPathFromModule(module);
-            if (pathFromModule.isPresent()) {
-                moduleDirPath = pathFromModule.get();
-            } else {
-                moduleDirPath = moduleDirPath.substring(0, childModuleIndex);
-            }
-        }
-
-        moduleChooseTextField.setText(moduleDirPath);
-    }
-    private int indexFromChildModule(String moduleDirPath) {
-        return moduleDirPath.indexOf(".idea");
-    }
-    private boolean hasChildModule(int childModuleIndex) {
-        return childModuleIndex > -1;
-    }
-    private Optional<String> getPathFromModule(Module module) {
-        // 兼容gradle获取子模块
-        VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
-        if (contentRoots.length == 1) {
-            return Optional.ofNullable(contentRoots[0].getPath());
-        }
-        return Optional.empty();
+        moduleChooseTextField.setText(ktormGeneratorService.parseModuleDirPath(module));
     }
 }
