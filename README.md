@@ -26,6 +26,14 @@ KtormGenerator is a plugin for generating Ktorm entity class from database table
   Download the [latest release](https://github.com/aooohan/ktorm-generator/releases/latest) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
+## How to use?
+1. Select some tables from Database Tools View, then pop-up menu bar, finally click Ktorm-Generator option.
+
+<img src="./doc/p1.png" alt="Editor" >
+
+2. Configure the information needed to generate.(you can also modify the final class name) and click Ok button
+
+<img src="./doc/p2.png" alt="Editor" >
 
 ---
 Plugin based on the [IntelliJ Platform Plugin Template][template].
