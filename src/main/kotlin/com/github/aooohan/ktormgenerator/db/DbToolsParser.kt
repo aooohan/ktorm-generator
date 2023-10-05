@@ -85,12 +85,11 @@ object DbToolsParser {
      * @param url the url
      * @return the string
      */
-    fun extractDatabaseTypeFromUrl(url: String?): String {
-        var url = url
-        return if (url == null) {
+    private fun extractDatabaseTypeFromUrl(u: String?): String {
+        return if (u.isNullOrBlank()) {
             ""
         } else {
-            url = url.toLowerCase()
+            val url = u.lowercase(Locale.getDefault())
             if (url.contains(":mysql")) {
                 "MySql"
             } else if (url.contains(":oracle")) {
@@ -204,6 +203,7 @@ object DbToolsParser {
             Types.REAL
         }
     }
+
 }
 
 data class IntellijTableInfo(

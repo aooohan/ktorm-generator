@@ -51,15 +51,19 @@ class KtormGeneratorService(project: Project) {
         return dbTables.map {
             TableUIInfo(
                 tableName = it.name,
-                className = dbStringToCamelStyle(it.name) ?: ""
+                className = convertNameToCamelStyle(it.name) ?: ""
             )
         }
     }
-    private fun dbStringToCamelStyle(str: String?): String? {
+    fun convertNameToCamelStyle(str: String?, firstLetterLower: Boolean = false): String? {
         str?.let {
             val lowerCaseStr = it.lowercase(Locale.getDefault())
             val sb = StringBuilder()
-            sb.append(lowerCaseStr[0].uppercaseChar())
+            if (firstLetterLower) {
+                sb.append(lowerCaseStr[0].lowercaseChar())
+            } else {
+                sb.append(lowerCaseStr[0].uppercaseChar())
+            }
             var i = 1
             while (i < lowerCaseStr.length) {
                 val c = lowerCaseStr[i]

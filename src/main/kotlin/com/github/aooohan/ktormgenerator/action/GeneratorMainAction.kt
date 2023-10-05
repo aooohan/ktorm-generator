@@ -16,6 +16,8 @@
 
 package com.github.aooohan.ktormgenerator.action
 
+import com.github.aooohan.ktormgenerator.db.DbToolsParser
+import com.github.aooohan.ktormgenerator.db.KtFileGenerator
 import com.intellij.database.psi.DbTable
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -53,6 +55,11 @@ class GeneratorMainAction: AnAction() {
         classGeneratorDialogWrapper.show()
 
         if (classGeneratorDialogWrapper.exitCode == Messages.YES) {
+            DbToolsParser.parseIntellijTableInfo(dbTables.first()).let {
+                KtFileGenerator(project).generateTableCode(it, classGeneratorDialogWrapper.generatorOptions).let {
+                    println(it)
+                }
+            }
             println(classGeneratorDialogWrapper.generatorOptions)
             TODO("生成代码")
         }
