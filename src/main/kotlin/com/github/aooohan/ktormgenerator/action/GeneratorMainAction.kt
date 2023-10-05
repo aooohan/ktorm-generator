@@ -23,6 +23,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.vfs.VirtualFileManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -35,9 +36,6 @@ class GeneratorMainAction: AnAction() {
 
     val logger: Logger by lazy {
         LoggerFactory.getLogger(GeneratorMainAction::class.java)
-    }
-    companion object {
-        const val TITLE = "Ktorm Generator"
     }
 
     override fun actionPerformed(event: AnActionEvent) {
@@ -55,13 +53,15 @@ class GeneratorMainAction: AnAction() {
         classGeneratorDialogWrapper.show()
 
         if (classGeneratorDialogWrapper.exitCode == Messages.YES) {
-            DbToolsParser.parseIntellijTableInfo(dbTables.first()).let {
-                KtFileGenerator(project).generateTableCode(it, classGeneratorDialogWrapper.generatorOptions).let {
-                    println(it)
+            val ktFileGenerator = KtFileGenerator(project)
+            dbTables.forEach { dbTable ->
+                DbToolsParser.parseIntellijTableInfo(dbTable).let {
+                    ktFileGenerator.doGenerate(it, classGeneratorDialogWrapper.generatorOptions)
                 }
             }
-            println(classGeneratorDialogWrapper.generatorOptions)
-            TODO("生成代码")
+            VirtualFileManager.getInstance().refreshWithoutFileWatcher(true)
+            Messages.showDialog("Code generated successfully", "Tips", arrayOf("Ok"), -1, null)
+
         }
 
     }

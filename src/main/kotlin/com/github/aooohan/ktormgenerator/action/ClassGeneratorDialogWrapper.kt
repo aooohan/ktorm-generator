@@ -38,7 +38,7 @@ class ClassGeneratorDialogWrapper(
     private val ktormGeneratorGUI: KtormGeneratorGUI
 
     init {
-        title = "Generate Options"
+        title = "Ktorm Generator"
 
         setSize(600, 300)
         val service = project.service<KtormGeneratorService>()

@@ -213,6 +213,7 @@ data class IntellijTableInfo(
     var databaseType: String = "",
     var columnInfos: List<IntellijColumnInfo> = ArrayList(),
     var primaryKeyColumns: List<IntellijColumnInfo> = ArrayList()
+
 )
 
 data class IntellijColumnInfo(
