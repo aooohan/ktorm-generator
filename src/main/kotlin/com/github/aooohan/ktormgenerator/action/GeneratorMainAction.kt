@@ -53,12 +53,10 @@ class GeneratorMainAction: AnAction() {
         classGeneratorDialogWrapper.show()
 
         if (classGeneratorDialogWrapper.exitCode == Messages.YES) {
-            val ktFileGenerator = KtFileGenerator(project)
-            dbTables.forEach { dbTable ->
-                DbToolsParser.parseIntellijTableInfo(dbTable).let {
-                    ktFileGenerator.doGenerate(it, classGeneratorDialogWrapper.generatorOptions)
-                }
-            }
+            val parseTables = dbTables.map { dbTable ->
+                DbToolsParser.parseIntellijTableInfo(dbTable)
+            }.toList()
+            KtFileGenerator(project).doGenerate(parseTables, classGeneratorDialogWrapper.generatorOptions)
             VirtualFileManager.getInstance().refreshWithoutFileWatcher(true)
             Messages.showDialog("Code generated successfully", "Tips", arrayOf("Ok"), -1, null)
 

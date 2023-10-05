@@ -17,6 +17,7 @@
 package com.github.aooohan.ktormgenerator.db
 
 import com.github.aooohan.ktormgenerator.action.GeneratorOptions
+import com.github.aooohan.ktormgenerator.dto.TableUIInfo
 import com.github.aooohan.ktormgenerator.services.KtormGeneratorService
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
@@ -42,18 +43,13 @@ class KtFileGenerator(
     }
 
     private fun generateTableCode(
-        tableInfo: IntellijTableInfo,
-        optionInfo: GeneratorOptions,
+        tableInfo: CodeTableInfo
     ): String {
-        // 生成类名，将表名称转换为驼峰式
-        val className = ktormGeneratorService.convertNameToCamelStyle(tableInfo.tableName, false)
-
+        val className = tableInfo.className
+        val optionInfo = tableInfo.optionInfo
         val parseImport = parseImport(tableInfo.columnInfos)
 
-        val columMap = tableInfo.columnInfos.map(::parseColum2Field).associateBy { it.originalName }
-        tableInfo.primaryKeyColumns.forEach {
-            columMap[it.name]?.primaryKey = true
-        }
+        val columMap = tableInfo.columnInfos.associateBy { it.originalName }
 
         val interfaceCode = buildString {
             appendLine(
@@ -84,7 +80,7 @@ class KtFileGenerator(
             appendLine("interface $className :Entity<$className> {")
             for (columInfo in tableInfo.columnInfos) {
                 val nullable = if (columInfo.nullable) "?" else ""
-                val fieldInfo = columMap[columInfo.name] ?: continue
+                val fieldInfo = columMap[columInfo.originalName] ?: continue
                 appendLine("    val ${fieldInfo.name}: ${fieldInfo.ktType}$nullable")
             }
             appendLine("}")
@@ -92,7 +88,7 @@ class KtFileGenerator(
             appendLine()
             appendLine("object ${className}s : Table<$className>(\"${tableInfo.tableName}\") {")
             for (columnInfo in tableInfo.columnInfos) {
-                val fieldInfo = columMap[columnInfo.name] ?: continue
+                val fieldInfo = columMap[columnInfo.originalName] ?: continue
                 if (!fieldInfo.primaryKey) {
                     appendLine("    val ${fieldInfo.name} = ${fieldInfo.ktormType}(\"${fieldInfo.originalName}\").bindTo { it.${fieldInfo.name}}")
                 } else {
@@ -105,13 +101,13 @@ class KtFileGenerator(
             appendLine()
             appendLine()
 
-            appendLine("val Database.${className!!.lowercase()}s get() = this.sequenceOf(${className}s)")
+            appendLine("val Database.${className.lowercase()}s get() = this.sequenceOf(${className}s)")
         }
 
         return interfaceCode
     }
 
-    private fun parseImport(columnInfos: List<IntellijColumnInfo>): List<String> {
+    private fun parseImport(columnInfos: List<FieldTypeInfo>): List<String> {
         return columnInfos.map {
             when (it.dataType) {
                 Types.DECIMAL -> "java.math.BigDecimal"
@@ -145,12 +141,15 @@ class KtFileGenerator(
         }
         filedInfo.name = convertName!!
         filedInfo.originalName = columnInfo.name
+        filedInfo.dataType = columnInfo.dataType
+        filedInfo.nullable = columnInfo.nullable
         return filedInfo
     }
 
 
-    private fun writeFile(tableInfo: IntellijTableInfo, optionInfo: GeneratorOptions, content: String) {
-        val tableName = ktormGeneratorService.convertNameToCamelStyle(tableInfo.tableName, false)
+    private fun writeFile(tableInfo: CodeTableInfo, content: String) {
+        val optionInfo = tableInfo.optionInfo
+        val className = tableInfo.className
         val basePath = "${optionInfo.moduleChooseText}/${optionInfo.basePathText}/${
             optionInfo.basePackageText.replace(
                 ".",
@@ -161,7 +160,7 @@ class KtFileGenerator(
                 ".",
                 "/"
             )
-        }/$tableName.kt"
+        }/$className.kt"
         val outputFile = File(basePath)
         if (!outputFile.exists()) {
             val parentFile = outputFile.parentFile
@@ -178,17 +177,61 @@ class KtFileGenerator(
         }
     }
 
-    fun doGenerate(tableInfo: IntellijTableInfo, optionInfo: GeneratorOptions) {
-        val content = generateTableCode(tableInfo, optionInfo)
-        writeFile(tableInfo, optionInfo, content)
+    fun doGenerate(tableInfos: List<IntellijTableInfo>, optionInfo: GeneratorOptions) {
+        val tableInfo = combineTableInfo(tableInfos, optionInfo)
+        tableInfo.forEach {
+            val content = generateTableCode(it)
+            writeFile(it, content)
+        }
+
+    }
+
+    private fun combineTableInfo(
+        tableInfos: List<IntellijTableInfo>,
+        optionInfo: GeneratorOptions
+    ): List<CodeTableInfo> {
+        val tableUIMap = optionInfo.tableInfoList.associateBy { it.tableName }
+        return tableInfos.mapNotNull {
+            val tableUIInfo: TableUIInfo? = tableUIMap[it.tableName]
+            if (tableUIInfo == null) {
+                null
+            } else {
+                val codeTableInfo = CodeTableInfo(
+                    tableName = tableUIInfo.tableName,
+                    className = tableUIInfo.className,
+                    optionInfo = optionInfo
+                )
+                val tableKeyFieldMap = it.primaryKeyColumns.associateBy { it.name }
+
+                val filedTypeInfos = it.columnInfos.map { columnInfo ->
+                    parseColum2Field(columnInfo).let { fti ->
+                        if (tableKeyFieldMap.containsKey(fti.name)) {
+                            fti.primaryKey = true
+                        }
+                        fti
+                    }
+                }.toList()
+                codeTableInfo.columnInfos = filedTypeInfos
+                codeTableInfo
+            }
+        }.toList()
     }
 
 }
 
+data class CodeTableInfo(
+    val tableName: String,
+    val className: String,
+    val optionInfo: GeneratorOptions,
+    var columnInfos: List<FieldTypeInfo> = ArrayList(),
+)
+
 data class FieldTypeInfo(
     val ktType: String,
     val ktormType: String,
+    var dataType: Int = Types.VARCHAR,
     var originalName: String = "",
     var name: String = "",
-    var primaryKey: Boolean = false
+    var primaryKey: Boolean = false,
+    var nullable: Boolean = true,
 )
