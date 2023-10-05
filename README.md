@@ -1,4 +1,9 @@
-# ktorm-generator
+<div align="left" style="display: flex;align-items: baseline; ">
+	<img src="./src/main/resources/META-INF/pluginIcon.svg" alt="Editor" width="50">
+    <h1 style="margin-left: 10px">ktorm-generator</h1>
+</div>
+
+
 
 ![Build](https://github.com/aooohan/ktorm-generator/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/22855-ktormgenerator.svg)](https://plugins.jetbrains.com/plugin/22855-ktormgenerator)
