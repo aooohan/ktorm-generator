@@ -173,10 +173,7 @@ class KtFileGenerator(
         }
         outputFile.writeText(content)
         // Refresh the file system to see the changes in the IDE
-        val virtualFile = LocalFileSystem.getInstance().findFileByIoFile(outputFile)
-        if (virtualFile != null) {
-            virtualFile.refresh(false, true)
-        }
+        LocalFileSystem.getInstance().findFileByIoFile(outputFile)?.refresh(false, true)
     }
 
     fun doGenerate(tableInfos: List<IntellijTableInfo>, optionInfo: GeneratorOptions) {

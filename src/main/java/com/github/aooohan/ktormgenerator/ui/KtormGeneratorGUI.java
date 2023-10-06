@@ -54,36 +54,15 @@ public class KtormGeneratorGUI {
     private JTextField basePackageTextField;
     private JTextField basePathTextField;
     private JTextField relativePackageTextField;
-    private JPanel listPanel;
+    private JPanel tableListPanel;
     private JTextField moduleChooseTextField;
     private JPanel rootPanel;
 
     private String moduleName;
 
-    public KtormGeneratorGUI(Project project, List<TableUIInfo> tableUIInfos, GeneratorOptions options) {
+    public KtormGeneratorGUI(Project project) {
         this.project = project;
         this.ktormGeneratorService = project.getService(KtormGeneratorService.class);
-
-        setOptions(options);
-        model.addRows(tableUIInfos);
-
-        TableView<TableUIInfo> tableView = new TableView<>(model);
-        GridConstraints gridConstraints = new GridConstraints();
-        gridConstraints.setFill(GridConstraints.FILL_HORIZONTAL);
-
-        listPanel.add(ToolbarDecorator.createDecorator(tableView)
-                        .setPreferredSize(new Dimension(860, 200))
-                        .disableAddAction()
-                        .disableRemoveAction()
-                        .disableUpDownActions()
-                        .createPanel(),
-                gridConstraints);
-
-        tableView.addPropertyChangeListener(evt -> {
-            if (evt.getPropertyName().equals("tableCellEditor")) {
-                options.setTableInfoList(model.getItems());
-            }
-        });
     }
 
     public JPanel getRootPanel() {
@@ -92,7 +71,8 @@ public class KtormGeneratorGUI {
 
 
 
-    private void setOptions(GeneratorOptions options) {
+    public void setOptions(List<TableUIInfo> tableUIInfos, GeneratorOptions options) {
+        model.addRows(tableUIInfos);
         options.setTableInfoList(model.getItems());
         basePackageTextField.setText(options.getBasePackageText());
         basePathTextField.setText(options.getBasePathText());
@@ -106,6 +86,24 @@ public class KtormGeneratorGUI {
                 }
             }
         }
+
+        TableView<TableUIInfo> tableView = new TableView<>(model);
+        GridConstraints gridConstraints = new GridConstraints();
+        gridConstraints.setFill(GridConstraints.FILL_HORIZONTAL);
+
+        tableListPanel.add(ToolbarDecorator.createDecorator(tableView)
+                        .setPreferredSize(new Dimension(860, 200))
+                        .disableAddAction()
+                        .disableRemoveAction()
+                        .disableUpDownActions()
+                        .createPanel(),
+                gridConstraints);
+
+        tableView.addPropertyChangeListener(evt -> {
+            if (evt.getPropertyName().equals("tableCellEditor")) {
+                options.setTableInfoList(model.getItems());
+            }
+        });
 
         moduleChooseTextField.addPropertyChangeListener(evt -> {
             options.setModuleChooseText(moduleChooseTextField.getText());

@@ -33,7 +33,7 @@
 
     <actions>
 
-        <action id="bmd-mybatis-generate-action"
+        <action id="ktorm-generator-action"
                 class="com.github.aooohan.ktormgenerator.action.GeneratorMainAction"
                 text="Ktorm-Generator"
                 description="Ktorm generator idea plugin">

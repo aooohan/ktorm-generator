@@ -38,18 +38,19 @@ class ClassGeneratorDialogWrapper(
 ) : DialogWrapper(project) {
     val generatorOptions: GeneratorOptions
     private val ktormGeneratorGUI: KtormGeneratorGUI
+    private val service = project.service<KtormGeneratorService>()
 
     init {
         title = "Ktorm Generator"
 
         setSize(600, 300)
-        val service = project.service<KtormGeneratorService>()
-        val tableUIInfos = service.parseTableNames(dbTables)
         val parseModuleDirPath = service.parseModuleDirPath(project.modules.first())
-
         this.generatorOptions = GeneratorOptions(parseModuleDirPath)
-
-        this.ktormGeneratorGUI = KtormGeneratorGUI(project, tableUIInfos, generatorOptions)
+        val tableUIInfos = service.parseTableNames(dbTables)
+        this.ktormGeneratorGUI = with(KtormGeneratorGUI(project)) {
+            setOptions(tableUIInfos, generatorOptions)
+            this
+        }
         super.init()
     }
 
