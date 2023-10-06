@@ -1,6 +1,6 @@
 <div align="left" >
     <img src="./src/main/resources/META-INF/pluginIcon.svg" alt="Editor" width="100">
-    <h1>ktorm-generator</h1>
+    <h1>KtormGenerator</h1>
 </div>
 
 
