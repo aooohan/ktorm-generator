@@ -50,15 +50,12 @@ public class KtormGeneratorGUI {
     );
     private final Project project;
     private final KtormGeneratorService ktormGeneratorService;
-    private JPanel leftPanel;
     private JTextField basePackageTextField;
     private JTextField basePathTextField;
     private JTextField relativePackageTextField;
     private JPanel tableListPanel;
     private JTextField moduleChooseTextField;
     private JPanel rootPanel;
-
-    private String moduleName;
 
     public KtormGeneratorGUI(Project project) {
         this.project = project;
@@ -78,14 +75,6 @@ public class KtormGeneratorGUI {
         basePathTextField.setText(options.getBasePathText());
         relativePackageTextField.setText(options.getRelativePackageText());
         moduleChooseTextField.setText(options.getModuleChooseText());
-        if (moduleName != null && !moduleName.isBlank()) {
-            Module[] modules = ModuleManager.getInstance(project).getModules();
-            for (Module module : modules) {
-                if (module.getName().equals(moduleName)) {
-                    chooseModulePath(module);
-                }
-            }
-        }
 
         TableView<TableUIInfo> tableView = new TableView<>(model);
         GridConstraints gridConstraints = new GridConstraints();
@@ -100,6 +89,7 @@ public class KtormGeneratorGUI {
                 gridConstraints);
 
         tableView.addPropertyChangeListener(evt -> {
+            System.out.println(evt.getPropertyName());
             if (evt.getPropertyName().equals("tableCellEditor")) {
                 options.setTableInfoList(model.getItems());
             }
@@ -128,18 +118,15 @@ public class KtormGeneratorGUI {
 
     private void chooseModule(Project project) {
         Module[] modules = ModuleManager.getInstance(project).getModules();
-        ChooseModulesDialog dialog = new ChooseModulesDialog(project, Arrays.asList(modules), "Choose Module", "Choose Single Module");
+        ChooseModulesDialog dialog = new ChooseModulesDialog(project, Arrays.asList(modules), "Choose Module", "Choose single module");
+        dialog.setSize(150, 300);
         dialog.setSingleSelectionMode();
         dialog.show();
 
         List<Module> chosenElements = dialog.getChosenElements();
         if (!chosenElements.isEmpty()) {
             Module module = chosenElements.get(0);
-            chooseModulePath(module);
-            moduleName = module.getName();
+            moduleChooseTextField.setText(ktormGeneratorService.parseModuleDirPath(module));
         }
-    }
-    private void chooseModulePath(Module module) {
-        moduleChooseTextField.setText(ktormGeneratorService.parseModuleDirPath(module));
     }
 }
