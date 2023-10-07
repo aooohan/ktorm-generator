@@ -92,9 +92,9 @@ class KtFileGenerator(
             for (columnInfo in tableInfo.columnInfos) {
                 val fieldInfo = columMap[columnInfo.originalName] ?: continue
                 if (!fieldInfo.primaryKey) {
-                    appendLine("    val ${fieldInfo.name} = ${fieldInfo.ktormType}(\"${fieldInfo.originalName}\").bindTo { it.${fieldInfo.name}}")
+                    appendLine("    val ${fieldInfo.name} = ${fieldInfo.ktormType}(\"${fieldInfo.originalName}\").bindTo { it.${fieldInfo.name} }")
                 } else {
-                    appendLine("    val ${fieldInfo.name} = ${fieldInfo.ktormType}(\"${fieldInfo.originalName}\").primaryKey().bindTo { it.${fieldInfo.name}}")
+                    appendLine("    val ${fieldInfo.name} = ${fieldInfo.ktormType}(\"${fieldInfo.originalName}\").primaryKey().bindTo { it.${fieldInfo.name} }")
                 }
             }
             appendLine("}")
