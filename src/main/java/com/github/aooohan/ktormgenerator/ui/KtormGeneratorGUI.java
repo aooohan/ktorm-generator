@@ -89,10 +89,7 @@ public class KtormGeneratorGUI {
                 gridConstraints);
 
         tableView.addPropertyChangeListener(evt -> {
-            System.out.println(evt.getPropertyName());
-            if (evt.getPropertyName().equals("tableCellEditor")) {
-                options.setTableInfoList(model.getItems());
-            }
+            options.setTableInfoList(model.getItems());
         });
 
         moduleChooseTextField.addPropertyChangeListener(evt -> {
