@@ -35,6 +35,10 @@ KtormGenerator is a plugin for generating [Ktorm](https://github.com/kotlin-orm/
 
 <img src="./doc/p2.png" alt="Editor" >
 
+3. Ok. You will see following result If you don't encounter any problems.
+
+<img src="./doc/p3.png" alt="Editor" >
+
 ---
 Plugin based on the [IntelliJ Platform Plugin Template][template].
 
