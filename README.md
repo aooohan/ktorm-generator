@@ -14,6 +14,11 @@
 KtormGenerator is a plugin for generating [Ktorm](https://github.com/kotlin-orm/ktorm) entity class from database table.
 <!-- Plugin description end -->
 
+
+### If this program has helped you, please give a star 🌟🌟🌟!
+
+
+
 ## Installation
 
 - Using the IDE built-in plugin system:
