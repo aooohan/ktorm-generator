@@ -15,7 +15,7 @@ KtormGenerator is a plugin for generating [Ktorm](https://github.com/kotlin-orm/
 <!-- Plugin description end -->
 
 
-### If this program has helped you, please give a star 🌟🌟🌟!
+### If this project is helpful to you, please give a star 🌟🌟🌟!
 
 
 
