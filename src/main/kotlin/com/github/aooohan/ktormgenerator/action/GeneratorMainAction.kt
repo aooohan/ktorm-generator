@@ -24,20 +24,20 @@ import com.intellij.database.psi.DbTable
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.LangDataKeys
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.VirtualFileManager
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 
 /**
  * @author : lihan
  * @date : 2023/10/4 20:50
  */
-class GeneratorMainAction: AnAction() {
+class GeneratorMainAction : AnAction() {
 
-    val logger: Logger by lazy {
-        LoggerFactory.getLogger(GeneratorMainAction::class.java)
+
+    val LOG: Logger by lazy {
+        Logger.getInstance(GeneratorMainAction::class.java)
     }
 
     override fun actionPerformed(event: AnActionEvent) {
@@ -46,7 +46,7 @@ class GeneratorMainAction: AnAction() {
         val tableElements = event.getData(LangDataKeys.PSI_ELEMENT_ARRAY)
         val dbTables = tableElements?.filterIsInstance<DbTable>()?.toList()
         if (dbTables.isNullOrEmpty()) {
-            logger.error("未选择表, 无法生成代码")
+            LOG.warn("No database table selected")
             return
         }
 
@@ -61,7 +61,6 @@ class GeneratorMainAction: AnAction() {
             KtFileGenerator(project).doGenerate(parseTables, classGeneratorDialogWrapper.generatorOptions)
             VirtualFileManager.getInstance().refreshWithoutFileWatcher(true)
             Messages.showDialog("Code generated successfully", "Tips", arrayOf("Ok"), -1, null)
-
         }
 
     }

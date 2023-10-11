@@ -79,7 +79,8 @@ class KtFileGenerator(
             """.trimIndent()
             )
 
-            appendLine("interface $className :Entity<$className> {")
+            appendLine("interface $className : Entity<$className> {")
+            appendLine("    companion object : Entity.Factory<$className>()")
             for (columInfo in tableInfo.columnInfos) {
                 val nullable = if (columInfo.nullable) "?" else ""
                 val fieldInfo = columMap[columInfo.originalName] ?: continue
