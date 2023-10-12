@@ -21,6 +21,7 @@ package com.github.aooohan.ktormgenerator.db
 import com.github.aooohan.ktormgenerator.action.GeneratorOptions
 import com.github.aooohan.ktormgenerator.dto.TableUIInfo
 import com.github.aooohan.ktormgenerator.services.KtormGeneratorService
+import com.intellij.database.util.common.isNotNullOrEmpty
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
@@ -84,7 +85,12 @@ class KtFileGenerator(
             for (columInfo in tableInfo.columnInfos) {
                 val nullable = if (columInfo.nullable) "?" else ""
                 val fieldInfo = columMap[columInfo.originalName] ?: continue
-                appendLine("    val ${fieldInfo.name}: ${fieldInfo.ktType}$nullable")
+                if (fieldInfo.comment.isNotNullOrEmpty) {
+                    appendLine("    /**")
+                    appendLine("     * ${fieldInfo.comment}")
+                    appendLine("     */")
+                }
+                appendLine("    var ${fieldInfo.name}: ${fieldInfo.ktType}$nullable")
             }
             appendLine("}")
 
@@ -146,6 +152,7 @@ class KtFileGenerator(
         filedInfo.originalName = columnInfo.name
         filedInfo.dataType = columnInfo.dataType
         filedInfo.nullable = columnInfo.nullable
+        filedInfo.comment = columnInfo.remarks
         return filedInfo
     }
 
@@ -234,4 +241,5 @@ data class FieldTypeInfo(
     var name: String = "",
     var primaryKey: Boolean = false,
     var nullable: Boolean = true,
+    var comment: String? = null,
 )
