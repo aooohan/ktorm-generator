@@ -53,11 +53,11 @@ class KtormGeneratorService(project: Project) {
         return dbTables.map {
             TableUIInfo(
                 tableName = it.name,
-                className = convertNameToCamelStyle(it.name) ?: ""
+                className = convertNameToCamelStyle(it.name)
             )
         }
     }
-    fun convertNameToCamelStyle(str: String, firstLetterLower: Boolean = false): String? {
+    fun convertNameToCamelStyle(str: String, firstLetterLower: Boolean = false): String {
         // TEST_NAME
         // TestName
         // test_name

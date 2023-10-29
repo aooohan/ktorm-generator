@@ -149,7 +149,7 @@ class KtFileGenerator(
             Types.TIME -> FieldTypeInfo("Time", "time")
             else -> FieldTypeInfo("String", "varchar")
         }
-        filedInfo.name = convertName!!
+        filedInfo.name = convertName
         filedInfo.originalName = columnInfo.name
         filedInfo.dataType = columnInfo.dataType
         filedInfo.nullable = columnInfo.nullable
