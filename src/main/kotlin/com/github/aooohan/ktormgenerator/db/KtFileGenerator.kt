@@ -134,6 +134,7 @@ class KtFileGenerator(
         val filedInfo = when (columnInfo.dataType) {
             Types.BOOLEAN -> FieldTypeInfo("Boolean", "boolean")
             Types.INTEGER -> FieldTypeInfo("Int", "int")
+            Types.TINYINT -> FieldTypeInfo("Int", "int")
             Types.SMALLINT -> FieldTypeInfo("Short", "short")
             Types.BIGINT -> FieldTypeInfo("Long", "long")
             Types.DECIMAL -> FieldTypeInfo("BigDecimal", "decimal")

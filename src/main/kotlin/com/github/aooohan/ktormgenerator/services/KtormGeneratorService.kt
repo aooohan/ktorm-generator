@@ -58,6 +58,9 @@ class KtormGeneratorService(project: Project) {
         }
     }
     fun convertNameToCamelStyle(str: String?, firstLetterLower: Boolean = false): String? {
+        if ("_" !in str.orEmpty()) {
+            return str
+        }
         str?.let {
             val lowerCaseStr = it.lowercase(Locale.getDefault())
             val sb = StringBuilder()
