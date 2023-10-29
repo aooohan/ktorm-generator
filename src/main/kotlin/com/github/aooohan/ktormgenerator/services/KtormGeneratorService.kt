@@ -57,33 +57,33 @@ class KtormGeneratorService(project: Project) {
             )
         }
     }
-    fun convertNameToCamelStyle(str: String?, firstLetterLower: Boolean = false): String? {
-        if ("_" !in str.orEmpty()) {
-            return str
-        }
-        str?.let {
-            val lowerCaseStr = it.lowercase(Locale.getDefault())
+    fun convertNameToCamelStyle(str: String, firstLetterLower: Boolean = false): String? {
+        // TEST_NAME
+        // TestName
+        // test_name
+        // testName
+        val result = if (str.contains("_")) {
             val sb = StringBuilder()
-            if (firstLetterLower) {
-                sb.append(lowerCaseStr[0].lowercaseChar())
-            } else {
-                sb.append(lowerCaseStr[0].uppercaseChar())
-            }
-            var i = 1
-            while (i < lowerCaseStr.length) {
-                val c = lowerCaseStr[i]
-                if (c != '_') {
-                    sb.append(c)
+            var i = 0
+            var toUp = !firstLetterLower
+            while (i < str.length) {
+                val c = str[i]
+                toUp = if (c == '_') {
+                    true
                 } else {
-                    if (i + 1 < lowerCaseStr.length) {
-                        sb.append(lowerCaseStr[i + 1].toUpperCase())
-                        i++
-                    }
+                    sb.append(if (toUp) c.uppercaseChar() else c.lowercaseChar())
+                    false
                 }
                 i++
             }
-            return sb.toString()
+            sb.toString()
+        } else {
+            str
         }
-        return null
+        return if (firstLetterLower) {
+            result.replaceFirstChar { it.lowercaseChar() }
+        } else {
+            result.replaceFirstChar { it.uppercaseChar() }
+        }
     }
 }
