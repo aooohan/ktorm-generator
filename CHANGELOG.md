@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.0.10] - 2024-04-17
+compitable with 2024.2
+
 ## [0.0.8] - 2023-10-29
 - bugfix: do not convert non-underlined field names
 - support: generate TINYINT to INT
@@ -24,7 +27,8 @@ Generate companion object for entity.
 ### Added
 - Support for generating Ktorm entity class from database table.
 
-[Unreleased]: https://github.com/aooohan/ktorm-generator/compare/v0.0.8...HEAD
+[Unreleased]: https://github.com/aooohan/ktorm-generator/compare/v0.0.10...HEAD
+[0.0.10]: https://github.com/aooohan/ktorm-generator/compare/v0.0.8...v0.0.10
 [0.0.8]: https://github.com/aooohan/ktorm-generator/compare/v0.0.7...v0.0.8
 [0.0.7]: https://github.com/aooohan/ktorm-generator/compare/v0.0.6...v0.0.7
 [0.0.6]: https://github.com/aooohan/ktorm-generator/compare/v0.0.5...v0.0.6
